@@ -19,35 +19,38 @@ class Point:
 	def __str__(self):
 		return f'Point coordinates : ({self.x},{self.y})' if not self.o else f'Point(O)'
 
-	def __add__(self, q):
-		return Addpoint(self, q)
+	def __add__(self, q, ec = EllipticCurve(497, 1768, 9739)):
+		# when p is a point at infinity
+		if self.o:
+			return q
+		# when q is a point at infinity
+		if q.o:
+			return self
+		# when Q = -P
+		if self.x == q.x and self.y == -q.y:
+			return Point()
+		# p and q are different
+		if self != q:
+			x_inv = pow((q.x - self.x), -1, ec.p)
+			l = (q.y - self.y)*x_inv % ec.p
+		else:
+			y_inv = pow(2*self.y, -1, ec.p)
+			l = (3*(self.x**2) + ec.a)*y_inv % ec.p
+		res_x = (l**2 - self.x - q.x) % ec.p
+		res_y = (l*(self.x - res_x) - self.y) % ec.p
+		return Point(res_x, res_y)
 
+num = int(input('How many points would you like to add? : '))
+user_input = input('Enter P Coordinates (x,y): ')
+x = int(user_input.split(',')[0])
+y = int(user_input.split(',')[1])
+sum = Point(x, y)
 
-def Addpoint(p, q, ec = EllipticCurve(497, 1768, 9739)):
-	# when p is a point at infinity
-	if p.o:
-		return q
-	# when q is a point at infinity
-	if q.o:
-		return p
-	# when Q = -P 
-	if p.x == q.x and p.y == -q.y:
-		return Point()
-	# p and q are different 
-	if p != q:
-		x_inv = pow((q.x - p.x), -1, ec.p)
-		l = (q.y - p.y)*x_inv % ec.p
-	else:
-		y_inv = pow(2*p.y, -1, ec.p)
-		l = (3*(p.x**2) + ec.a)*y_inv % ec.p
-	res_x = (l**2 - p.x - q.x) % ec.p
-	res_y = (l*(p.x - res_x) - p.y) % ec.p
-	return Point(res_x, res_y)
+for i in range(1, num):
+	str = 'Enter ' + chr(ord('P')+i) + ' Coordinates (x,y): '
+	user_input = input(str)
+	x = int(user_input.split(',')[0])
+	y = int(user_input.split(',')[1])
+	sum += Point(x, y)
 
-p = Point(493, 5564)
-q = Point(1539, 4742)
-r = Point(4403, 5202)
- 
-s = p + p + q + r
-
-print(s)
+print(sum)
