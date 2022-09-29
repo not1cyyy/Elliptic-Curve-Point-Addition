@@ -1,5 +1,4 @@
 from Crypto.Util.number import inverse
-from time import sleep
 
 class EllipticCurve:
 	def __init__(self, a, b, p):
@@ -7,13 +6,12 @@ class EllipticCurve:
 		self.b = b
 		self.p = p 
 
-sleep(1)
-
 a = int(input('Enter the Elliptic Curve property a : '))
-sleep(1)
+ 
 b = int(input('Enter the Elliptic Curve property b : '))
-sleep(1)
+ 
 p = int(input('Enter the Finite Field integer p : '))
+
 ec = EllipticCurve(a, b, p)
 
 class Point:
@@ -52,10 +50,10 @@ class Point:
 		res_y = (l*(self.x - res_x) - self.y) % ec.p
 		return Point(res_x, res_y)
 
-sleep(1)
+ 
 
 num = int(input('How many points would you like to add? : '))
-sleep(1)
+ 
 user_input = input('Enter P Coordinates (x,y): ')
 x = int(user_input.split(',')[0])
 y = int(user_input.split(',')[1])
@@ -68,8 +66,4 @@ for i in range(1, num):
 	y = int(user_input.split(',')[1])
 	sum += Point(x, y)
 
-sleep(1)
-
 print(sum)
-
-sleep(1)
